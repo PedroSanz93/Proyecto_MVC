@@ -77,7 +77,7 @@ class BarraLateral extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ImagenesScreen()),
+                  MaterialPageRoute(builder: (context) => Settings()),
                 );
               },
               child: Container(
@@ -85,7 +85,7 @@ class BarraLateral extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 color: const Color.fromARGB(137, 157, 253, 225),
-                child: const Text("API Wordpress"),
+                child: const Text("API Marvel"),
               ),
             ),
             Expanded(child: Container()
