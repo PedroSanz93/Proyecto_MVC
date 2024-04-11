@@ -41,7 +41,7 @@ class barraNavegacion extends StatelessWidget {
         ),
       drawer: const BarraLateral(),
       backgroundColor: const Color.fromARGB(137, 157, 253, 225),
-      body: const TabBarView(
+      body: TabBarView(
             children: [
               Pagina1(),
               Pagina2(),

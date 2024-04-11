@@ -7,7 +7,7 @@ class Routes {
     '/home': (context) => const HomeScreen(),
     '/pagina1': (context) => const Pagina1(),
     '/pagina2': (context) => const Pagina2(),
-    '/pagina3': (context) => const Pagina3(),
+    '/pagina3': (context) => Pagina3(),
   };
 }
 

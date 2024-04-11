@@ -3,27 +3,29 @@ import 'package:proyecto_mvc/src/model/movie.dart';
 import 'package:proyecto_mvc/src/service/movie_service.dart';
 
 class Pagina3 extends StatefulWidget {
-  const Pagina3({Key? key}) : super(key: key);
-
   @override
   _Pagina3State createState() => _Pagina3State();
 }
 
 class _Pagina3State extends State<Pagina3> {
   final MovieService _movieService = MovieService();
-  late Future<List<Movie>> _moviesFuture;
+  late String _searchQuery;
+  List<Movie> _searchResults = [];
 
   @override
   void initState() {
     super.initState();
-    _loadMovies();
+    _searchQuery = '';
   }
 
-  Future<void> _loadMovies() async {
-    try {
-      _moviesFuture = _movieService.fetchMovies();
-    } catch (e) {
-      print('Error fetching movies: $e');
+  Future<void> _searchMovies(String query) async {
+    if (query.isNotEmpty) {
+      final List<Movie>? results = await _movieService.list(query);
+      if (results != null) {
+        setState(() {
+          _searchResults = results;
+        });
+      }
     }
   }
 
@@ -31,106 +33,88 @@ class _Pagina3State extends State<Pagina3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movies'),
+        title: Text('Buscar Películas'),
       ),
-      body: FutureBuilder<List<Movie>>(
-        future: _moviesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            List<Movie> movies = snapshot.data ?? [];
-            return ListView.builder(
-              itemCount: movies.length,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Buscar películas...',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    _searchMovies(_searchQuery);
+                  },
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _searchResults.length,
               itemBuilder: (context, index) {
-                Movie movie = movies[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 4.0),
-                  child: Card(
-                    elevation: 4.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        // Posible lógica al hacer clic en la película
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Poster de la película
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: movie.posterPath.isNotEmpty
-                                  ? Image.network(
-                                      movie.getImage(),
-                                      width: 100.0,
-                                      height: 150.0,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Container(
-                                      width: 100.0,
-                                      height: 150.0,
-                                      color: Colors.grey[300],
-                                      child: Icon(
-                                        Icons.image_not_supported,
-                                        size: 50.0,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                            ),
-                            SizedBox(width: 10.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Título de la película
-                                  Text(
-                                    movie.title,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5.0),
-                                  // Descripción de la película
-                                  Text(
-                                    movie.overview,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 10.0),
-                                  // Otros detalles de la película
-                                  Text(
-                                    "Popularity: ${movie.popularity}",
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
-                                  Text(
-                                    "Vote Average: ${movie.voteAverage}",
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
-                                  Text(
-                                    "Release Date: ${movie.releaseDate}",
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                final Movie movie = _searchResults[index];
+                return Card(
+                  elevation: 4,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    leading: Container(
+                      width: 100, 
+                      height: 200, 
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                          fit: BoxFit.scaleDown, 
                         ),
                       ),
+                    ),
+                    title: Text(
+                      movie.title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5),
+                        Text(
+                          'Release Date: ${movie.releaseDate}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Popularity: ${movie.popularity}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Overview: ${movie.overview}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Vote Average: ${movie.voteAverage}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
                     ),
                   ),
                 );
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

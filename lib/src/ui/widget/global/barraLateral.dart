@@ -77,7 +77,7 @@ class BarraLateral extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ApiWordpress()),
+                  MaterialPageRoute(builder: (context) => ImagenesScreen()),
                 );
               },
               child: Container(

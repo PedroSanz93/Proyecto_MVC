@@ -1,4 +1,4 @@
-class Movie{
+class Movie {
   double popularity;
   int voteCount;
   bool video;
@@ -28,29 +28,25 @@ class Movie{
     required this.title,
     required this.voteAverage,
     required this.overview,
-    required this.releaseDate
-    }
-  );
+    required this.releaseDate,
+  });
 
-  static Movie fromJson(Map<String, dynamic> json){
+  static Movie fromJson(Map<String, dynamic> json) {
     return Movie(
-      popularity: (json['popularity'] as num).toDouble(), 
-      voteCount: json['vote_count'] as int, 
-      video: json['video'] as bool, 
-      posterPath: json['poster_path'] as String, 
-      id: json['id'] as int, 
-      adult: json['adult'] as bool, 
-      backdropPath: json['backdrop_path'] as String, 
-      originalLanguage: json['original_language'] as String, 
-      originalTitle: json['original_title'] as String, 
-      genreIds: (json['genre_ids'] as List).map((e) => e as int).toList(), 
-      title: json['title'] as String, 
-      voteAverage: (json['vote_average'] as num).toDouble(), 
-      overview: json['overview'] as String, 
-      releaseDate: json['release_date'] as String,
-      );
-  }
-    String getImage(){
-    return 'https://image.tmdb.org/t/p/w500' + this.posterPath;
+      popularity: (json["popularity"] as num).toDouble(),
+      voteCount: json["vote_count"] as int,
+      video: json["video"] as bool,
+      posterPath: json["poster_path"] as String? ?? '',
+      id: json["id"] as int,
+      adult: json["adult"] as bool,
+      backdropPath: json["backdrop_path"] as String? ?? '',
+      originalLanguage: json["original_language"] as String,
+      originalTitle: json["original_title"] as String,
+      genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
+      title: json["title"] as String,
+      voteAverage: (json["vote_average"] as num).toDouble(),
+      overview: json["overview"] as String,
+      releaseDate: json["release_date"] as String,
+    );
   }
 }

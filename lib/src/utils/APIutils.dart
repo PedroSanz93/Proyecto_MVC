@@ -2,42 +2,43 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class APIUtils {
-  late String url; 
-  String method = 'GET';
-  Map<String, String>? headers;
-  Map<String, dynamic>? data;
+  late String url;
+  late String method;
+  late Map<String, String>? headers;
+  late Map<String, dynamic>? data;
 
-  APIUtils(
-    this.url, {
-      this.method = 'GET', 
-      this.headers, 
-      this.data
-      }
-    );
+  APIUtils({required this.url, required this.method , this.headers, this.data});
 
-  Future<Map<String, dynamic>?> call() async {
+  Future<http.Response?> call() async {
     try {
       var response;
-      if (method == 'GET') {
-        response = await http.get(Uri.parse(url), headers: headers);
-      } else if (method == 'POST') {
-        response = await http.post(Uri.parse(url), headers: headers, body: jsonEncode(data));
-      } else if (method == 'PUT') {
-        response = await http.put(Uri.parse(url), headers: headers, body: jsonEncode(data));
-      } else if (method == 'DELETE') {
-        response = await http.delete(Uri.parse(url), headers: headers);
+
+      switch(method) {
+        case 'GET':
+          response = await http.get(Uri.parse(url), headers: headers);
+          break;
+
+        case 'POST':
+          response = await http.post(Uri.parse(url), headers: headers, body: jsonEncode(data));
+          break;
+
+        case 'PUT':
+          response = await http.put(Uri.parse(url), headers: headers, body: jsonEncode(data));
+          break;
+
+        case 'DELETE':
+          response = await http.delete(Uri.parse(url), headers: headers);
+          break;
+
+        default:
+          print('Error: Método no permitido');
+          break;
       }
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        print('Error: ${response.reasonPhrase}');
-        return null;
-      }
+      return response;
     } catch (e) {
       print('Error: $e');
       return null;
     }
   }
 }
-
