@@ -24,6 +24,7 @@ class Settings extends StatelessWidget {
               itemBuilder: (context, index) {
                 final Product product = snapshot.data![index];
                 return ListTile(
+                  leading: Text("prueba"),
                   title: Text(product.title),
                   subtitle: Text('Precio: \$${product.price.toString()}'),
                 );

@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:proyecto_mvc/src/utils/APIutils.dart';
 
 class APIProductUtils {
-  final String baseUrl = 'https://api.escuelajs.co/api/v1/products';
+  final String baseUrl = 'https://api.escuelajs.co/api/v1';
 
   Future<http.Response?> call(
     String apiUrl, 
@@ -17,15 +17,16 @@ class APIProductUtils {
     }
   }
 
-  Future<http.Response?> get(String endpoint, {Map<String, dynamic>? queryParams}) async {
-    try {
-      final String apiUrl = '$baseUrl/$endpoint${_buildQueryParams(queryParams)}';
-      return await call(apiUrl, 'GET');
-    } catch (e) {
-      print('Error en la solicitud GET: $e');
-      return null;
-    }
+Future<http.Response?> get(String endpoint, {Map<String, dynamic>? queryParams}) async {
+  try {
+    final String apiUrl = '$baseUrl/$endpoint${_buildQueryParams(queryParams)}';
+    print('URL completa: $apiUrl'); 
+    return await call(apiUrl, 'GET');
+  } catch (e) {
+    print('Error en la solicitud GET: $e');
+    return null;
   }
+}
 
   Future<http.Response?> post(String endpoint, {Map<String, dynamic>? body}) async {
     try {

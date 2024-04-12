@@ -85,7 +85,7 @@ class BarraLateral extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
                 color: const Color.fromARGB(137, 157, 253, 225),
-                child: const Text("API Marvel"),
+                child: const Text("API Product"),
               ),
             ),
             Expanded(child: Container()

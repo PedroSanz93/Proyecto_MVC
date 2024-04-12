@@ -1,7 +1,7 @@
 class Product {
   final int id;
   final String title;
-  final double price;
+  final int price;
   final String description;
   final List<String> images;
 
@@ -17,7 +17,7 @@ class Product {
     return Product(
       id: json['id'] as int,
       title: json['title'] as String,
-      price: json['price'] as double,
+      price: json['price'] as int,
       description: json['description'] as String,
       images: (json['images'] as List).map((image) => image as String).toList(),
     );
